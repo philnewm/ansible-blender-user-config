@@ -1,3 +1,109 @@
 ---
 
+- name: Get blender version
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      blender --version | head -n1 | awk '{print $2}'
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: present_blender_version
+
+- name: Set blender version
+  ansible.builtin.set_fact:
+    blender_version: "{{ present_blender_version.stdout }}"
+
+
+- name: Query settings
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ settings.keys() }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      blender --background --python-expr "
+      import bpy;
+      print({{ item }})
+      " | sed -n '1p'
+  args:
+    executable: /bin/bash
+  register: settings_query
+  changed_when: false
+
+- name: Test settings
+  loop: "{{ settings_query.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  ansible.builtin.assert:
+    that:
+      - settings[item.item] | from_yaml | string == item.stdout
+    fail_msg: "Expected {{ settings[item.item] }} but got {{ item.stdout }} for {{ item.item }}"
+    quiet: true
+
+- name: Query enabled addons
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      blender --background --python-expr "
+      import bpy;
+      print(bpy.context.preferences.addons.keys())
+      " | sed -n '1p'
+  changed_when: false
+  args:
+    executable: /bin/bash
+  register: enabled_addons
+
+- name: Test enable addons
+  loop: "{{ blender_addons }}"
+  loop_control:
+    label: "{{ item }}"
+  ansible.builtin.assert:
+    that:
+      - item in enabled_addons.stdout | to_json
+    fail_msg: "Failed to find addon {{ item }}"
+    quiet: true
+
+- name: Test development setup
+  when: pipeline_dev
+  block:
+    - name: Check if blender python virtual environment exists
+      become: true
+      become_user: "{{ user }}"
+      ansible.builtin.stat:
+        path: "{{ blender_venv_path }}"
+      register: venv_stat
+
+    - name: Assert that virtual environment directory exists
+      ansible.builtin.assert:
+        that:
+          - venv_stat.stat.exists
+          - venv_stat.stat.isdir
+        fail_msg: "Virtual environment directory does not exist at {{ blender_venv_path }}"
+        quiet: true
+
+    - name: Get list of installed Python packages in the venv
+      become: true
+      become_user: "{{ user }}"
+      ansible.builtin.command:
+        cmd: "{{ blender_venv_path }}/bin/pip list --format=json"
+      register: pip_list
+      changed_when: false
+
+    - name: Parse installed packages
+      ansible.builtin.set_fact:
+        installed_packages: "{{ pip_list.stdout | from_json | map(attribute='name') | list }}"
+
+    - name: Assert expected Python packages are installed
+      loop: "{{ blender_python_modules }}"
+      ansible.builtin.assert:
+        that:
+          - (item.split('==')[0]) in installed_packages
+        fail_msg: "Failed to find python module {{ item }} in enviroenemnt '{{ blender_venv_path }}'"
+        quiet: true
+
 ...

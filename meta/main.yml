@@ -1,10 +1,10 @@
 ---
 
 galaxy_info:
-  role_name: blender-user-config
+  role_name: blender_user_config
   namespace: philnewm
-  author: author_name
-  description: ansible-role-template description
+  author: philnewm
+  description: Configure blender for user setup
   license: some_license
   min_ansible_version: "2.1"
   platforms:
@@ -18,4 +18,4 @@ galaxy_info:
       versions:
         - "jammy"
   galaxy_tags: []
-dependencies: []
+dependencies: [philnewm.blender]

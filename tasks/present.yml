@@ -1,14 +1,49 @@
 ---
 
-- name: Install debian specific package_facts dependency
+- name: Get blender version
   become: true
-  when: ansible_distribution == "Debian"
-  ansible.builtin.package:
-    name: python-apt-common
-    state: present
+  become_user: "{{ user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      blender --version | head -n1 | awk '{print $2}'
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: present_blender_version
 
-# INFO This task may be obsolete for your use-case
-- name: Gather package facts
-  ansible.builtin.package_facts:
+- name: Set blender version
+  ansible.builtin.set_fact:
+    blender_version: "{{ present_blender_version.stdout }}"
+
+- name: Check for GPU backend libraries
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      ldconfig -p | grep -q {{ item.lib }}
+  args:
+    executable: /bin/bash
+  loop: "{{ cycles_gpu_backend }}"
+  register: gpu_backend_check
+  failed_when: gpu_backend_check.rc not in [0, 1]
+  changed_when: false
+
+- name: Determine best GPU backend
+  ansible.builtin.set_fact:
+    cycles_compute_device: "{{ (cycles_gpu_backend | zip(gpu_backend_check.results) | selectattr('1.rc', 'equalto', 0) | map('first') | first).name | default('NONE') }}"
+
+- name: Configure blender
+  ansible.builtin.include_tasks:
+    file: config.yml
+
+- name: Add to gnome favorites
+  when: blender_gnome_favorite
+  ansible.builtin.include_tasks:
+    file: favorite.yml
+
+- name: Setup blender dev env
+  when: pipeline_dev
+  ansible.builtin.include_tasks:
+    file: development_setup.yml
 
 ...

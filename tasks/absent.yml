@@ -1,8 +1,13 @@
 ---
 
-- name: Remove unused dependencies
-  become: true
-  ansible.builtin.package:
-    autoremove: true
+- name: Remove dev env
+  when: pipeline_dev
+  ansible.builtin.file:
+    path: "{{ blender_venv_path }}"
+    state: absent
+
+- name: Comment on no tasks
+  ansible.builtin.debug:
+    msg: "Since this role only applies settings and doesn't install packages - there's no absent logic to handle"
 
 ...

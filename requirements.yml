@@ -1,6 +1,5 @@
-# Add ansible role requirements
 collections:
   - community.general
 
-# roles:
-#   - name: <role.name>
+roles:
+  - name: philnewm.blender

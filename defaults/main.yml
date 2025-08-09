@@ -1,5 +1,53 @@
 ---
 
 state: present
+blender_gnome_favorite: true
+pipeline_dev: true
+user: "vagrant"
+
+blender_desktop_launcher: blender.desktop
+
+blender_venv_path: "/home/{{ user }}/python_venv/blender_venv"
+
+cycles_gpu_backend:
+  - name: "OPTIX"
+    lib: "libnvoptix.so"
+  - name: "CUDA"
+    lib: "libcuda.so"
+  - name: "HIP"
+    lib: "libamdhip64.so"
+  - name: "ONEAPI"
+    lib: "libze_loader.so"
+
+settings:
+  "bpy.context.preferences.view.show_splash": False
+  "bpy.context.preferences.view.show_developer_ui": False
+  "bpy.context.preferences.view.show_tooltips_python": False
+  "bpy.context.preferences.view.ui_line_width": "'AUTO'"
+  "bpy.context.preferences.edit.use_negative_frames": True
+  "bpy.context.preferences.themes['Default'].view_3d.vertex_size": 5
+  "bpy.context.preferences.themes['Default'].view_3d.grid[0]": 0.364705890417099
+  "bpy.context.preferences.themes['Default'].view_3d.grid[1]": 0.44705885648727417
+  "bpy.context.preferences.themes['Default'].view_3d.grid[2]": 0.49803924560546875
+  "bpy.context.preferences.themes['Default'].view_3d.grid[3]": 0.10588236153125763
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.background_type": "'LINEAR'"
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.hsv": "(0.8111110925674438, 0.7894737124443054, 0.22352942824363708)"
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.hsv": "(0.6124999523162842, 0.7407407760620117, 0.21176472306251526)"
+  "bpy.context.preferences.edit.undo_steps": 512
+  "bpy.context.preferences.filepaths.save_version": 10
+  "bpy.context.preferences.addons['cycles'].preferences.compute_device_type": "'{{ cycles_compute_device | default('NONE')}}'"
+
+blender_addons:
+  - "node_wrangler"
+  - "cycles"
+
+cycles_compute_device_type:
+  "Advanced Micro Devices, Inc. [AMD/ATI]": "'HIP'"
+  "NVIDIA Corporation": "'OPTIX'"
+  "Intel Corporation": "'ONEAPI'"
+
+blender_python_modules:
+  - "bpy=={{ blender_version }}"
+  - fake-bpy-module-latest
 
 ...

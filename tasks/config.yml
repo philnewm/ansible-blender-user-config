@@ -1,0 +1,67 @@
+---
+
+- name: Query settings
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ settings.keys() }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      blender --background --python-expr "
+      import bpy;
+      print({{ item }})
+      " | sed -n '1p'
+  args:
+    executable: /bin/bash
+  register: settings_output
+  changed_when: false
+
+- name: Apply custom settings
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ settings_output.results }}"
+  loop_control:
+    loop_var: setting
+    label: "{{ setting.item }}"
+  when: settings[setting.item] | from_yaml | string != setting.stdout
+  ansible.builtin.command:
+    cmd: |
+      blender --background --python-expr "
+      import bpy;
+      {{ setting.item }} = {{ settings[setting.item] }};
+      bpy.ops.wm.save_userpref()"
+  register: apply_settings
+  changed_when: apply_settings.rc == 0
+
+- name: Query enabled addons
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      blender --background --python-expr "
+      import bpy;
+      print(bpy.context.preferences.addons.keys())
+      " | sed -n '1p'
+  changed_when: false
+  args:
+    executable: /bin/bash
+  register: enabled_addons
+
+- name: Enable addons
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ blender_addons }}"
+  loop_control:
+    label: "{{ item }}"
+  when: item not in enabled_addons.stdout | to_json
+  ansible.builtin.command:
+    cmd: |
+      blender --background --python-expr "
+      import bpy;
+      bpy.ops.preferences.addon_enable(module='{{ item }}');
+      bpy.ops.wm.save_userpref()"
+  register: enable_addons
+  changed_when: enable_addons.rc == 0
+
+...

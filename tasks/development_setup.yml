@@ -1,0 +1,41 @@
+---
+
+- name: Locate Blender executable
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command:
+    cmd: "which blender"
+  register: blender_path
+  changed_when: false
+
+- name: Get Blender's Python executable path
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command:
+    cmd: "{{ blender_path.stdout }} --background --python-expr 'import sys; print(sys.executable)'"
+  register: blender_python
+  changed_when: false
+
+- name: Set Blender Python path fact
+  ansible.builtin.set_fact:
+    blender_python_path: "{{ blender_python.stdout_lines[0] }}"
+
+- name: Ensure Blender dev virtualenv exists with latest pip
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ blender_venv_path }}"
+    virtualenv_command: "{{ blender_python_path }} -m venv"
+
+- name: Install blender dev packages
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ blender_python_modules }}"
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    virtualenv: "{{ blender_venv_path }}"
+    # extra_args: "--extra-index-url https://download.blender.org/pypi/"
+
+...

@@ -1,0 +1,30 @@
+---
+
+- name: Install dependencies
+  become: true
+  ansible.builtin.package:
+    name: python3-psutil
+    state: present
+
+- name: Get current favorite apps
+  become: true
+  become_user: "{{ user }}"
+  community.general.dconf:
+    key: /org/gnome/shell/favorite-apps
+    state: read
+  register: current_favorites
+
+- name: Clean favorites
+  ansible.builtin.set_fact:
+    gnome_favorites: "{{ current_favorites.value | from_yaml | default([], true) }}"
+
+- name: Add blender to favorites
+  become: true
+  become_user: "{{ user }}"
+  when: blender_desktop_launcher not in gnome_favorites
+  community.general.dconf:
+    key: /org/gnome/shell/favorite-apps
+    value: "{{ gnome_favorites + [blender_desktop_launcher] }}"
+    state: present
+
+...
