@@ -1,28 +1,21 @@
 ---
 
 galaxy_info:
-  role_name: role_template
+  role_name: blender-user-config
   namespace: philnewm
   author: author_name
   description: ansible-role-template description
-
   license: some_license
-
   min_ansible_version: "2.1"
-
   platforms:
-  - name: EL
-    versions:
-    - "9"
-  - name: Debian
-    versions:
-    - "bookworm"
-  - name: "Ubuntu"
-    versions:
-    - "jammy"
-
+    - name: EL
+      versions:
+        - "9"
+    - name: Debian
+      versions:
+        - "bookworm"
+    - name: "Ubuntu"
+      versions:
+        - "jammy"
   galaxy_tags: []
-
 dependencies: []
-
-...
