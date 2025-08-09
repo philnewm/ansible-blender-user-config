@@ -1,5 +1,11 @@
 ---
 
+- name: Install pip module dependency
+  become: true
+  ansible.builtin.package:
+    name: python3-packaging
+    state: present
+
 - name: Locate Blender executable
   become: true
   become_user: "{{ user }}"
