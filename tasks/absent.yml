@@ -1,0 +1,8 @@
+---
+
+- name: Remove unused dependencies
+  become: true
+  ansible.builtin.package:
+    autoremove: true
+
+...

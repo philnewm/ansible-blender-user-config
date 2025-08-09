@@ -1,0 +1,30 @@
+---
+
+name: Alma9-CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'README.md'
+      - '**/*.md'
+      - .gitignore
+      - ./meta/main.yml
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'README.md'
+      - '**/*.md'
+      - .gitignore
+
+permissions:
+  contents: read
+
+jobs:
+  alma9-ci:
+    uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-vbox.yml@main
+    with:
+      scenario_name: alma9
+
+...

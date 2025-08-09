@@ -1,0 +1,30 @@
+---
+
+name: Ubuntu2204-CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'README.md'
+      - '**/*.md'
+      - .gitignore
+      - ./meta/main.yml
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'README.md'
+      - '**/*.md'
+      - .gitignore
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu2204-ci:
+    uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-vbox.yml@main
+    with:
+      scenario_name: ubuntu2204
+
+...
