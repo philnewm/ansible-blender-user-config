@@ -1,5 +1,8 @@
 ---
 
+- name: Gather package facts
+  ansible.builtin.package_facts:
+
 - name: Get blender version
   become: true
   become_user: "{{ user }}"
@@ -17,13 +20,15 @@
     blender_version: "{{ present_blender_version.stdout }}"
 
 - name: Check for GPU backend libraries
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ cycles_gpu_backend }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
       ldconfig -p | grep -q {{ item.lib }}
   args:
     executable: /bin/bash
-  loop: "{{ cycles_gpu_backend }}"
   register: gpu_backend_check
   failed_when: gpu_backend_check.rc not in [0, 1]
   changed_when: false
