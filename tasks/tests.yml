@@ -16,7 +16,6 @@
   ansible.builtin.set_fact:
     blender_version: "{{ present_blender_version.stdout }}"
 
-
 - name: Query settings
   become: true
   become_user: "{{ user }}"
