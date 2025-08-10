@@ -3,6 +3,8 @@
 - name: Get blender version
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -19,6 +21,8 @@
 - name: Query settings
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   loop: "{{ settings.keys() }}"
   ansible.builtin.shell:
     cmd: |
@@ -45,6 +49,8 @@
 - name: Query enabled addons
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail

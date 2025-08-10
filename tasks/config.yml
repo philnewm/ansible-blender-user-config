@@ -3,14 +3,13 @@
 - name: Query settings
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   loop: "{{ settings.keys() }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
-      blender --background --python-expr "
-      import bpy;
-      print({{ item }})
-      " | sed -n '1p'
+      blender --background --python-expr "import bpy; print({{ item }})" | sed -n '1p'
   args:
     executable: /bin/bash
   register: settings_output
@@ -19,6 +18,8 @@
 - name: Apply custom settings
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   loop: "{{ settings_output.results }}"
   loop_control:
     loop_var: setting
@@ -36,6 +37,8 @@
 - name: Query enabled addons
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -51,6 +54,8 @@
 - name: Enable addons
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   loop: "{{ blender_addons }}"
   loop_control:
     label: "{{ item }}"

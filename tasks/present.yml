@@ -6,14 +6,16 @@
 - name: Get blender version
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
       blender --version | head -n1 | awk '{print $2}'
   args:
     executable: /bin/bash
-  changed_when: false
   register: present_blender_version
+  changed_when: false
 
 - name: Set blender version
   ansible.builtin.set_fact:

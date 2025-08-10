@@ -6,7 +6,7 @@ pipeline_dev: true
 user: "vagrant"
 
 blender_desktop_launcher: blender.desktop
-
+user_path: "/usr/local/bin:/usr/local/sbin"
 blender_venv_path: "/home/{{ user }}/python_venv/blender_venv"
 
 cycles_gpu_backend:
