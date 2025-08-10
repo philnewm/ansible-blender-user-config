@@ -50,11 +50,9 @@ Elaborate external dependencies and how to use them.
 
 ## Dependencies
 
-List role ansible-galaxy dependencies - if any.
+* [philnewm.blender](https://galaxy.ansible.com/ui/standalone/roles/philnewm/blender/)
 
 ## Example Playbook
-
-Add an example playbook
 
 ```yaml
 ---
