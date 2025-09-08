@@ -108,7 +108,7 @@
       ansible.builtin.assert:
         that:
           - (item.split('==')[0]) in installed_packages
-        fail_msg: "Failed to find python module {{ item }} in enviroenemnt '{{ blender_venv_path }}'"
+        fail_msg: "Failed to find python module {{ item }} in environment '{{ blender_venv_path }}'"
         quiet: true
 
 ...
