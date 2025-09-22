@@ -24,7 +24,15 @@
   loop_control:
     loop_var: setting
     label: "{{ setting.item }}"
-  when: settings[setting.item] | from_yaml | string != setting.stdout
+  when: >
+    (
+      settings[setting.item] is string
+      and settings[setting.item] | from_yaml | string != setting.stdout
+    )
+    or (
+      settings[setting.item] is not string
+      and settings[setting.item] | string != setting.stdout
+    )
   ansible.builtin.command:
     cmd: |
       blender --background --python-expr "

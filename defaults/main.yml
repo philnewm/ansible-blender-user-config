@@ -32,16 +32,16 @@ settings:
   "bpy.context.preferences.themes['Default'].view_3d.grid[3]": 0.10588236153125763
   "bpy.context.preferences.themes['Default'].view_3d.space.gradients.background_type": "'LINEAR'"
   # "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.hsv": "(0.8111110925674438, 0.7894737124443054, 0.22352942824363708)"
-  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.r": 0.20
-  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.g": 0.01
-  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.b": 0.25
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.r": 0.20000001788139343
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.g": 0.011764707043766975
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.high_gradient.b": 0.250980406999588
   # "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.hsv": "(0.6124999523162842, 0.7407407760620117, 0.21176472306251526)"
-  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.r": 0.04
-  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.g": 0.18
-  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.b": 0.23
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.r": 0.03921568766236305
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.g": 0.18039216101169586
+  "bpy.context.preferences.themes['Default'].view_3d.space.gradients.gradient.b": 0.23137256503105164
   "bpy.context.preferences.edit.undo_steps": 512
   "bpy.context.preferences.filepaths.save_version": 10
-  "bpy.context.preferences.addons['cycles'].preferences.compute_device_type": "'{{ cycles_compute_device | default('NONE')}}'"
+  "bpy.context.preferences.addons['cycles'].preferences.compute_device_type": "{{ cycles_compute_device | default('NONE')}}"
 
 blender_addons:
   - "node_wrangler"
