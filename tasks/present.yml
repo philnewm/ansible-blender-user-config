@@ -43,11 +43,6 @@
   ansible.builtin.include_tasks:
     file: config.yml
 
-- name: Add to gnome favorites
-  when: "'gnome-shell' in ansible_facts.packages and blender_gnome_favorite"
-  ansible.builtin.include_tasks:
-    file: gnome_favorite.yml
-
 - name: Setup blender dev env
   when: pipeline_dev
   ansible.builtin.include_tasks:
