@@ -1,6 +1,6 @@
 ---
 
-name: Ubuntu2204-CI
+name: Debian13
 
 on:
   push:
@@ -22,9 +22,9 @@ permissions:
   contents: read
 
 jobs:
-  ubuntu2204-ci:
-    uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-vbox.yml@main
+  ci:
+    uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-podman.yml@main
     with:
-      scenario_name: ubuntu2204
+      scenario_name: debian13
 
 ...

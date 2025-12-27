@@ -1,6 +1,6 @@
 ---
 
-name: Debian12-CI
+name: Fedora43
 
 on:
   push:
@@ -22,9 +22,9 @@ permissions:
   contents: read
 
 jobs:
-  debian12-ci:
-    uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-vbox.yml@main
+  ci:
+    uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-podman.yml@main
     with:
-      scenario_name: debian12
+      scenario_name: fedora43
 
 ...
