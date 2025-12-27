@@ -1,10 +1,11 @@
 # Blender-user-config-Role
 
-[![Alma9-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/alma9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/alma9-ci-caller.yml)  [![Rocky9-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/rocky9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/rocky9-ci-caller.yml)  [![CentOSStream9-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/centosstream9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/centosstream9-ci-caller.yml)  [![Debian12-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/debian12-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/debian12-ci-caller.yml)  [![Ubuntu2204-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/ubuntu2204-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/ubuntu2204-ci-caller.yml)
+[![Alma9-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/alma9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/alma9-ci-caller.yml) [![Rocky9-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/rocky9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/rocky9-ci-caller.yml) [![CentOSStream9-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/centosstream9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/centosstream9-ci-caller.yml) [![Fedora43-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/fedora43-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/fedora43-ci-caller.yml)<br>
+[![Ubuntu2404-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/ubuntu2404-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/ubuntu2404-ci-caller.yml) [![Debian13-CI](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/debian13-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-blender-user-config/actions/workflows/debian13-ci-caller.yml)
 
 Role description
 
-This role includes a vagrant based molecule testing setup as a submodule at `molecule/`
+This role includes a molecule testing setup as a submodule at `molecule/`
 
 ## Structure
 
@@ -20,9 +21,7 @@ This role includes a vagrant based molecule testing setup as a submodule at `mol
  ┣ 📂tasks
  ┃ ┣ 📜absent.yml
  ┃ ┣ 📜config.yml
- ┃ ┣ 📜dependencies.yml
  ┃ ┣ 📜development_setup.yml
- ┃ ┣ 📜favorite.yml
  ┃ ┣ 📜main.yml
  ┃ ┣ 📜present.yml
  ┃ ┗ 📜tests.yml
@@ -63,6 +62,8 @@ tasks:
       name: ansible-blender-user-config
     vars:
       state: present
+      pipeline_dev: true
+      user: "ansible"
 
 ...
 ```
