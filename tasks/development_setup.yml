@@ -12,7 +12,7 @@
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   ansible.builtin.command:
     cmd: "which blender"
   register: blender_path

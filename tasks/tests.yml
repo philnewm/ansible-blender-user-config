@@ -4,7 +4,7 @@
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -18,12 +18,12 @@
   ansible.builtin.set_fact:
     blender_version: "{{ present_blender_version.stdout }}"
 
-- name: Query settings
+- name: Query blender settings
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
-  loop: "{{ settings.keys() }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
+  loop: "{{ blender_settings.keys() }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -42,15 +42,15 @@
     label: "{{ item.item }}"
   ansible.builtin.assert:
     that:
-      - settings[item.item] | from_yaml | string == item.stdout
-    fail_msg: "Expected {{ settings[item.item] }} but got {{ item.stdout }} for {{ item.item }}"
+      - blender_settings[item.item] | string == item.stdout
+    fail_msg: "Expected {{ blender_settings[item.item] }} but got {{ item.stdout }} for {{ item.item }}"
     quiet: true
 
 - name: Query enabled addons
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail

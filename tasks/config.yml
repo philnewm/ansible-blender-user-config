@@ -1,11 +1,11 @@
 ---
 
-- name: Query settings
+- name: Query blender settings
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
-  loop: "{{ settings.keys() }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
+  loop: "{{ blender_settings.keys() }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -15,30 +15,22 @@
   register: settings_output
   changed_when: false
 
-- name: Apply custom settings
+- name: Apply custom blender settings
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   loop: "{{ settings_output.results }}"
   loop_control:
     loop_var: setting
     label: "{{ setting.item }}"
-  when: >
-    (
-      settings[setting.item] is string
-      and settings[setting.item] | from_yaml | string != setting.stdout
-    )
-    or (
-      settings[setting.item] is not string
-      and settings[setting.item] | string != setting.stdout
-    )
-  ansible.builtin.command:
-    cmd: |
-      blender --background --python-expr "
-      import bpy;
-      {{ setting.item }} = {{ settings[setting.item] }};
-      bpy.ops.wm.save_userpref()"
+  when: blender_settings[setting.item] | trim != setting.stdout | trim
+  ansible.builtin.shell:
+    cmd: >
+      blender --background --python-expr "{{ 'import bpy; {} = {}; bpy.ops.wm.save_userpref()'.format(
+        setting.item,
+        blender_settings[setting.item] if blender_settings[setting.item] is number or blender_settings[setting.item] is boolean else '\"' ~ blender_settings[setting.item] ~ '\"'
+      ) }}"
   register: apply_settings
   changed_when: apply_settings.rc == 0
 
@@ -46,7 +38,7 @@
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -63,7 +55,7 @@
   become: true
   become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   loop: "{{ blender_addons }}"
   loop_control:
     label: "{{ item }}"

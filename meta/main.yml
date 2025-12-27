@@ -10,11 +10,14 @@ galaxy_info:
     - name: EL
       versions:
         - "9"
+    - name: Fedora
+      versions:
+        - "43"
     - name: Debian
       versions:
-        - "bookworm"
+        - "trixie"
     - name: "Ubuntu"
       versions:
-        - "jammy"
+        - "noble"
   galaxy_tags: []
 dependencies: [philnewm.blender]
